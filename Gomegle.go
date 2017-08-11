@@ -44,23 +44,24 @@ func (g *Gomegle) SendMessage(message string) {
 	}
 } 
 
-func (g *Gomegle) CheckForNewMessage () []string {
-	var returnMessages []string 
+func (g *Gomegle) CheckForNewMessage (lastLatest int) (string, int) {
+	var returnMessages string = ""
 	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, ".strangermsg ")
 	if err != nil {
 		panic(err)
 	}
-		
-	for i := 0; i < len(strangerMessages); i++ {
+	var thisLatest int
+	for i := lastLatest; i < len(strangerMessages); i++ {
 		strangerSpan, err := strangerMessages[i].FindElement(selenium.ByTagName, "span")
 		if err != nil {
-			return returnMessages
+			return returnMessages, 0
 		}
 		strangerSpanText, err := strangerSpan.GetAttribute("innerHTML")
 		if err != nil {
-			return returnMessages
+			return returnMessages, 0
 		}
-		returnMessages = append(returnMessages, strangerSpanText)
+		returnMessages += strangerSpanText
+		thisLatest = i
 	} 
-	return returnMessages
+	return returnMessages, thisLatest+1
 } 
