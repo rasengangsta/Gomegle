@@ -46,6 +46,14 @@ func (g *Gomegle) SendMessage(message string) bool {
 		g.findNewPartner();
 		return false
 	}
+
+	if message == "DISCONNECT" {
+		g.findNewPartner()
+		g.findNewPartner()
+		g.findNewPartner()
+		return false
+	}
+
 	// Enter some new message in text box.
 	chatTextBox, err := g.Driver.FindElement(selenium.ByCSSSelector, ".chatmsg ")
 	err = chatTextBox.SendKeys(message + `	
