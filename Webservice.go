@@ -16,7 +16,7 @@ package main
 
 import (
   "github.com/go-martini/martini"
-  "Gomegle/Gomegle"
+  "github.com/rasengangsta/Gomegle/Gomegle"
 )
 
 func main() {
