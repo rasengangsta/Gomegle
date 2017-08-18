@@ -28,6 +28,10 @@ func SetupOmegle() Gomegle {
 func (g *Gomegle) StartChatting () {
 	// Get a reference to the text chat button.
 	elem, err := g.Driver.FindElement(selenium.ByCSSSelector, "#textbtn")
+
+	chatTextBox, err := g.Driver.FindElement(selenium.ByCSSSelector, ".newtopicinput ")
+	err = chatTextBox.SendKeys(`Gomegle
+	`)
 	if err != nil {
 		panic(err)
 	}
