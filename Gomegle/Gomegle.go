@@ -48,6 +48,17 @@ func (g *Gomegle) SendMessage(message string) {
 	}
 } 
 
+func (g *Gomegle) checkIfPartnerConnected() bool {
+	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, ".chatmsg disabled")
+	if err != nil {
+		panic(err)
+	}
+	if (len(strangerMessages) == 0) {
+		return true;
+	}
+	return false;
+}
+
 func (g *Gomegle) CheckForNewMessage (lastLatest int) (string, int) {
 	var returnMessages string = ""
 	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, ".strangermsg ")
