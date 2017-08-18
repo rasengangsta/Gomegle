@@ -38,7 +38,14 @@ func (g *Gomegle) StartChatting () {
 	elem.Click()
 }
 
-func (g *Gomegle) SendMessage(message string) {
+func (g *Gomegle) SendMessage(message string) bool {
+
+	partnerConnected := g.checkIfPartnerConnected()
+
+	if !partnerConnected{
+		g.findNewPartner();
+		return false
+	}
 	// Enter some new message in text box.
 	chatTextBox, err := g.Driver.FindElement(selenium.ByCSSSelector, ".chatmsg ")
 	err = chatTextBox.SendKeys(message + `	
@@ -46,10 +53,11 @@ func (g *Gomegle) SendMessage(message string) {
 	if err != nil {
 		panic(err)
 	}
+	return true
 } 
 
 func (g *Gomegle) checkIfPartnerConnected() bool {
-	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, ".chatmsg disabled")
+	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, "textarea[class='chatmsg disabled']")
 	if err != nil {
 		panic(err)
 	}
@@ -59,7 +67,27 @@ func (g *Gomegle) checkIfPartnerConnected() bool {
 	return false;
 }
 
+func (g *Gomegle) findNewPartner() {
+	
+	elem, err := g.Driver.FindElement(selenium.ByCSSSelector, ".disconnectbtn")
+
+	if err != nil {
+		panic(err)
+	}
+
+	elem.Click();
+
+}
+
 func (g *Gomegle) CheckForNewMessage (lastLatest int) (string, int) {
+
+	partnerConnected := g.checkIfPartnerConnected()
+
+	if !partnerConnected{
+		g.findNewPartner();
+		return "DISCONNECTED", 0
+	}
+
 	var returnMessages string = ""
 	strangerMessages, err := g.Driver.FindElements(selenium.ByCSSSelector, ".strangermsg ")
 	if err != nil {
